@@ -1,0 +1,39 @@
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include "mpi.h"
+using namespace std;
+
+void ring(int N, int M, int argc, char* argv[]) {
+	int ProcNum, ProcRank, RecvRank;
+	int msg = 0;
+	MPI_Status Status;
+	MPI_Init(&argc, &argv);
+	MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
+	MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+	if (ProcRank == 0)
+		MPI_Send(&ProcRank, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+
+	for (int i = 0; i < M; i++)
+	{
+		if (ProcRank == 0)
+			cout << "Loop" << i + 1 << endl;
+		MPI_Recv(&msg, 1, MPI_INT, MPI_ANY_SOURCE,
+			MPI_ANY_TAG, MPI_COMM_WORLD, &Status);
+		printf("\n Hello from process %3d", ProcRank);
+		cout << "Msg: " << msg << endl;
+		msg++;
+		MPI_Send(&ProcRank, 1, MPI_INT, (ProcRank == N - 1 ? 0 : ProcRank + 1), 0, MPI_COMM_WORLD);
+
+	}
+	MPI_Finalize();
+}
+
+
+int main(int argc, char* argv[])
+{
+	ring(4, 5, argc, argv);
+	system("pause");
+	return 0;
+}
