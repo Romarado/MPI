@@ -6,7 +6,7 @@
 using namespace std;
 
 void ring(int N, int M, int argc, char* argv[]) {
-	int ProcNum, ProcRank, RecvRank;
+	int ProcNum, ProcRank;
 	int msg = 0;
 	MPI_Status Status;
 	MPI_Init(&argc, &argv);
