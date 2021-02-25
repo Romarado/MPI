@@ -17,13 +17,14 @@ void ring(int N, int M, int argc, char* argv[]) {
 
 	for (int i = 0; i < M; i++)
 	{
-		if (ProcRank == 0)
-			cout << "Loop" << i + 1 << endl;
+		
 		MPI_Recv(&msg, 1, MPI_INT, MPI_ANY_SOURCE,
 			MPI_ANY_TAG, MPI_COMM_WORLD, &Status);
-		printf("\n Hello from process %3d", ProcRank);
+		printf("\n Hello from process %3d ", ProcRank);
 		cout << "Msg: " << msg << endl;
 		msg++;
+		if (ProcRank == 0)
+			cout << "Loop" << i + 1 << endl;
 		MPI_Send(&ProcRank, 1, MPI_INT, (ProcRank == N - 1 ? 0 : ProcRank + 1), 0, MPI_COMM_WORLD);
 
 	}
